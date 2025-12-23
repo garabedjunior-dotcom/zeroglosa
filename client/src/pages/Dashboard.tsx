@@ -102,14 +102,14 @@ export default function Dashboard() {
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                 <DollarSign className="h-4 w-4" />
-                Valor Recuperado
+                Valor Protegido
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-foreground">
                 R$ {((kpis?.valorRecuperado || 0) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
               </div>
-              <p className="text-xs text-muted-foreground mt-1">Economia total</p>
+              <p className="text-xs text-muted-foreground mt-1">Evitado antes do envio</p>
             </CardContent>
           </Card>
 
@@ -135,7 +135,7 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-foreground">{(kpis?.totalLotes || 0) * 2}h</div>
-              <p className="text-xs text-muted-foreground mt-1">Tempo economizado</p>
+              <p className="text-xs text-muted-foreground mt-1">Com validação automática</p>
             </CardContent>
           </Card>
         </div>

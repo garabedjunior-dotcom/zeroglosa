@@ -53,11 +53,10 @@ export default function Home() {
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-5xl font-bold text-foreground mb-6">
-              Reduza Glosas Médicas com <span className="text-primary">Inteligência Artificial</span>
+              Evite Glosas Médicas com <span className="text-primary">Validação Inteligente</span>
             </h1>
             <p className="text-xl text-muted-foreground mb-8">
-              Plataforma completa para gestão de faturamento TISS que reduz retrabalho, 
-              aumenta aprovação de guias e recupera receitas perdidas com glosas.
+              Plataforma completa que valida guias TISS antes do envio, identifica problemas automaticamente e previne glosas com inteligência artificial.
             </p>
             <div className="flex gap-4 justify-center">
               <a href={getLoginUrl()}>
@@ -76,22 +75,22 @@ export default function Home() {
       {/* Stats Section */}
       <section className="py-16 bg-card">
         <div className="container">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
               <div className="text-4xl font-bold text-primary mb-2">47-68%</div>
-              <div className="text-sm text-muted-foreground">Redução de Glosas</div>
+              <div className="text-sm text-muted-foreground">Menos Glosas</div>
             </div>
             <div>
               <div className="text-4xl font-bold text-primary mb-2">90%</div>
-              <div className="text-sm text-muted-foreground">Economia de Tempo</div>
+              <div className="text-sm text-muted-foreground">Tempo Economizado</div>
             </div>
             <div>
-              <div className="text-4xl font-bold text-primary mb-2">50%</div>
-              <div className="text-sm text-muted-foreground">Redução no Prazo</div>
+              <div className="text-4xl font-bold text-primary mb-2">100%</div>
+              <div className="text-sm text-muted-foreground">Guias Validadas</div>
             </div>
             <div>
               <div className="text-4xl font-bold text-primary mb-2">93%</div>
-              <div className="text-sm text-muted-foreground">Menos Recursos</div>
+              <div className="text-sm text-muted-foreground">Menos Retrabalho</div>
             </div>
           </div>
         </div>
@@ -103,7 +102,7 @@ export default function Home() {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-4">Funcionalidades Principais</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Tudo que você precisa para eliminar glosas e otimizar seu faturamento médico
+              Validação automática antes do envio para prevenir glosas e otimizar seu faturamento
             </p>
           </div>
 
@@ -127,7 +126,7 @@ export default function Home() {
                 </div>
                 <CardTitle>Gestão de Lotes TISS</CardTitle>
                 <CardDescription>
-                  Upload de XML com validação automática, score de risco e status visual para cada lote
+                  Upload de XML com validação automática pré-envio, score de risco e identificação de problemas
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -139,7 +138,7 @@ export default function Home() {
                 </div>
                 <CardTitle>Conversor OCR</CardTitle>
                 <CardDescription className="text-accent-foreground">
-                  <span className="font-semibold">Diferencial:</span> Digitalize faturas em papel e converta para XML TISS automaticamente
+                  <span className="font-semibold">Diferencial:</span> Digitalize faturas em papel, converta para XML TISS e valide antes do envio
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -163,7 +162,7 @@ export default function Home() {
                 </div>
                 <CardTitle>IA Copiloto</CardTitle>
                 <CardDescription>
-                  Análise inteligente de riscos, explicações detalhadas e geração automática de recursos de glosa
+                  Identificação preventiva de riscos, sugestões de correção e geração de recursos quando necessário
                 </CardDescription>
               </CardHeader>
             </Card>

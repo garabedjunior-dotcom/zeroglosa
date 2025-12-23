@@ -24,11 +24,11 @@ export default function Ajuda() {
       items: [
         {
           titulo: "Como criar meu primeiro lote",
-          conteudo: "Para criar um novo lote, acesse o Dashboard e clique em 'Novo Lote XML'. Selecione a operadora e faça upload do arquivo XML TISS. O sistema validará automaticamente e exibirá o score de risco."
+          conteudo: "Para criar um novo lote, acesse o Dashboard e clique em 'Novo Lote XML'. Selecione a operadora e faça upload do arquivo XML TISS. O sistema validará automaticamente ANTES do envio e exibirá o score de risco para que você corrija problemas preventivamente."
         },
         {
           titulo: "Entendendo o Dashboard",
-          conteudo: "O Dashboard apresenta 4 KPIs principais: Redução de Glosas (taxa de aprovação), Valor Recuperado (economia total), Dias para Recebimento (média estimada) e Horas Poupadas (tempo economizado). Use os gráficos para visualizar a distribuição de lotes por status e origem."
+          conteudo: "O Dashboard apresenta 4 KPIs principais: Redução de Glosas (taxa de aprovação), Valor Protegido (valor que seria glosado mas foi corrigido antes do envio), Dias para Recebimento (média estimada) e Horas Poupadas (tempo economizado com validação automática). Use os gráficos para visualizar a distribuição de lotes por status e origem."
         },
         {
           titulo: "Configurando operadoras",
@@ -42,7 +42,7 @@ export default function Ajuda() {
       items: [
         {
           titulo: "Como usar o OCR para digitalizar faturas",
-          conteudo: "Acesse 'Converter Fatura (OCR)' no menu. Tire uma foto ou escaneie a fatura em papel. Arraste a imagem para a área de upload ou clique para selecionar. Após processar, revise os campos extraídos e corrija se necessário antes de criar o lote."
+          conteudo: "Acesse 'Converter Fatura (OCR)' no menu. Tire uma foto ou escaneie a fatura em papel. Arraste a imagem para a área de upload ou clique para selecionar. Após processar, revise os campos extraídos e corrija se necessário. O sistema converterá para XML TISS e aplicará validações ANTES do envio à operadora."
         },
         {
           titulo: "Melhores práticas para fotos de faturas",
@@ -50,7 +50,7 @@ export default function Ajuda() {
         },
         {
           titulo: "Campos extraídos automaticamente",
-          conteudo: "O OCR extrai: nome e CPF do paciente, número da carteirinha, código TUSS, CID, valor do procedimento, nome e CRM do médico. Sempre revise os dados antes de criar o lote para garantir precisão."
+          conteudo: "O OCR extrai: nome e CPF do paciente, número da carteirinha, código TUSS, CID, valor do procedimento, nome e CRM do médico. Após a conversão para XML TISS, o sistema aplica validações automáticas para identificar problemas ANTES do envio."
         }
       ]
     },
@@ -60,15 +60,15 @@ export default function Ajuda() {
       items: [
         {
           titulo: "Como usar o Chat com IA",
-          conteudo: "Acesse 'IA Copiloto' e selecione a aba 'Chat'. Digite suas perguntas sobre regras de operadoras, validação de guias ou redução de glosas. Você pode selecionar um lote específico para análise contextual."
+          conteudo: "Acesse 'IA Copiloto' e selecione a aba 'Chat'. Digite suas perguntas sobre regras de operadoras, validação de guias ou como evitar glosas antes do envio. Você pode selecionar um lote específico para análise preventiva."
         },
         {
           titulo: "Explicar Risco de um lote",
-          conteudo: "Na aba 'Explicar Risco', selecione um lote e clique em 'Explicar Risco'. A IA analisará o score de risco, status, valor e quantidade de guias, fornecendo uma análise detalhada dos riscos e sugestões de correção."
+          conteudo: "Na aba 'Explicar Risco', selecione um lote e clique em 'Explicar Risco'. A IA analisará o score de risco ANTES do envio, identificando problemas e fornecendo sugestões de correção para evitar glosas."
         },
         {
           titulo: "Gerar texto de recurso de glosa",
-          conteudo: "Na aba 'Gerar Recurso', selecione um lote glosado, descreva o motivo da glosa e clique em 'Gerar Recurso'. A IA criará um texto profissional e técnico para contestação, citando normas da ANS quando aplicável."
+          conteudo: "Na aba 'Gerar Recurso', selecione um lote que já foi glosado, descreva o motivo da glosa e clique em 'Gerar Recurso'. A IA criará um texto profissional para contestação, citando normas da ANS. Lembre-se: o ideal é usar a validação preventiva para evitar glosas."
         }
       ]
     },
@@ -82,7 +82,7 @@ export default function Ajuda() {
         },
         {
           titulo: "Score de Risco",
-          conteudo: "O score de risco (0-100%) indica a probabilidade de glosa. 0-40%: baixo risco (verde). 41-70%: risco médio (amarelo). 71-100%: alto risco (vermelho). Revise lotes com score alto antes de enviar."
+          conteudo: "O score de risco (0-100%) indica a probabilidade de glosa ANTES do envio. 0-40%: baixo risco (verde) - pronto para envio. 41-70%: risco médio (amarelo) - revisar. 71-100%: alto risco (vermelho) - corrigir antes de enviar. Use este score para prevenir glosas."
         },
         {
           titulo: "Filtros e busca de lotes",
@@ -116,12 +116,12 @@ export default function Ajuda() {
       resposta: "TISS (Troca de Informações na Saúde Suplementar) é o padrão obrigatório estabelecido pela ANS para troca de informações entre prestadores de serviços de saúde e operadoras de planos de saúde no Brasil."
     },
     {
-      pergunta: "Por que minhas guias são glosadas?",
-      resposta: "Glosas ocorrem por diversos motivos: falta de autorização prévia, documentação incompleta, incompatibilidade entre CID e procedimento TUSS, valores fora dos limites contratuais, ou erros de preenchimento. Use a IA Copiloto para análise detalhada."
+      pergunta: "Como o ZeroGlosa previne glosas?",
+      resposta: "O ZeroGlosa valida suas guias ANTES do envio à operadora, identificando automaticamente: falta de autorização prévia, documentação incompleta, incompatibilidade entre CID e procedimento TUSS, valores fora dos limites contratuais e erros de preenchimento. Corrija os problemas antes de enviar para evitar glosas."
     },
     {
       pergunta: "Como funciona a validação automática?",
-      resposta: "Ao fazer upload de um XML TISS, o sistema aplica as regras cadastradas da operadora, verifica a estrutura do arquivo, compatibilidade entre CID e TUSS, limites de valores e documentação obrigatória, gerando um score de risco."
+      resposta: "Ao fazer upload de um XML TISS ou converter uma fatura via OCR, o sistema aplica as regras cadastradas da operadora, verifica a estrutura do arquivo, compatibilidade entre CID e TUSS, limites de valores e documentação obrigatória ANTES do envio, gerando um score de risco. Isso permite corrigir problemas preventivamente."
     },
     {
       pergunta: "Posso editar os dados extraídos pelo OCR?",

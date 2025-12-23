@@ -92,3 +92,12 @@
 - [x] Testes de integração OCR
 - [ ] Testes de validação XML TISS
 - [ ] Testes de geração de relatórios
+
+
+## Correções Conceituais - Foco em Prevenção
+- [x] Alterar KPI "Valor Recuperado" para "Valor Protegido" (valor que seria glosado mas foi corrigido antes do envio)
+- [x] Ajustar descrição dos KPIs para refletir prevenção, não recuperação
+- [x] Corrigir fluxo do OCR para enfatizar validação pré-envio
+- [x] Atualizar mensagens da IA Copiloto para focar em correção preventiva
+- [x] Revisar textos da Central de Ajuda para destacar prevenção
+- [x] Ajustar landing page para comunicar corretamente o valor da plataforma

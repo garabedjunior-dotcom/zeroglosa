@@ -170,7 +170,7 @@ export default function OCR() {
                 <Scan className="h-8 w-8 text-accent" />
                 Conversor de Faturas (OCR)
               </h1>
-              <p className="text-muted-foreground mt-1">Digitalize faturas em papel e converta para XML TISS</p>
+              <p className="text-muted-foreground mt-1">Digitalize faturas em papel, converta para XML TISS e valide antes do envio</p>
             </div>
           </div>
         </div>
@@ -184,7 +184,7 @@ export default function OCR() {
             <CardHeader>
               <CardTitle>1. Upload da Fatura</CardTitle>
               <CardDescription>
-                Tire uma foto ou escaneie a fatura manual
+                Tire uma foto ou escaneie a fatura manual para conversão e validação
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -286,7 +286,7 @@ export default function OCR() {
             <CardHeader>
               <CardTitle>2. Dados Extraídos</CardTitle>
               <CardDescription>
-                Revise e corrija os campos extraídos
+                Revise os campos antes de criar o lote para validação
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -430,16 +430,16 @@ export default function OCR() {
             <div className="flex gap-3">
               <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
               <div className="space-y-2 text-sm">
-                <p className="font-medium text-foreground">Campos extraídos automaticamente:</p>
+                <p className="font-medium text-foreground">Após a conversão, o sistema irá:</p>
                 <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                  <li>Nome e CPF do paciente</li>
-                  <li>Número da carteirinha do convênio</li>
-                  <li>Código TUSS e CID do procedimento</li>
-                  <li>Valor do procedimento</li>
-                  <li>Nome e CRM do médico responsável</li>
+                  <li>Converter a fatura para XML TISS padrão ANS</li>
+                  <li>Aplicar regras específicas da operadora selecionada</li>
+                  <li>Validar compatibilidade entre CID e procedimento TUSS</li>
+                  <li>Verificar limites de valores e documentação obrigatória</li>
+                  <li>Gerar score de risco para identificação de problemas</li>
                 </ul>
                 <p className="text-muted-foreground mt-4">
-                  <strong>Dica:</strong> Sempre revise os dados extraídos antes de criar o lote para garantir precisão.
+                  <strong>Importante:</strong> Corrija qualquer problema identificado ANTES de enviar à operadora para evitar glosas.
                 </p>
               </div>
             </div>

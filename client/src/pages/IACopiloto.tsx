@@ -134,7 +134,7 @@ export default function IACopiloto() {
                 <Brain className="h-8 w-8 text-primary" />
                 IA Copiloto
               </h1>
-              <p className="text-muted-foreground mt-1">Assistente inteligente para análise de glosas e sugestões</p>
+              <p className="text-muted-foreground mt-1">Assistente inteligente para prevenção de glosas e validação pré-envio</p>
             </div>
           </div>
         </div>
@@ -165,7 +165,7 @@ export default function IACopiloto() {
                 <CardHeader>
                   <CardTitle>Conversa com IA</CardTitle>
                   <CardDescription>
-                    Faça perguntas sobre regras de operadoras, validação de guias e redução de glosas
+                    Faça perguntas sobre regras de operadoras, validação de guias e como evitar glosas antes do envio
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -253,7 +253,7 @@ export default function IACopiloto() {
               <CardHeader>
                 <CardTitle>Análise de Risco</CardTitle>
                 <CardDescription>
-                  Obtenha uma análise detalhada dos riscos de glosa de um lote específico
+                  Identifique riscos de glosa ANTES do envio e receba sugestões de correção
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -308,7 +308,7 @@ export default function IACopiloto() {
               <CardHeader>
                 <CardTitle>Gerador de Recursos</CardTitle>
                 <CardDescription>
-                  Crie textos profissionais para contestação de glosas automaticamente
+                  Gere recursos para contestação quando uma glosa já ocorreu
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
