@@ -166,6 +166,11 @@ export default function IACopiloto() {
                   <CardTitle>Conversa com IA</CardTitle>
                   <CardDescription>
                     Faça perguntas sobre regras de operadoras, validação de guias e como evitar glosas antes do envio
+                    {loteSelecionado && (
+                      <span className="block mt-2 text-primary font-medium">
+                        ✓ Analisando Lote #{lotes?.find(l => l.id.toString() === loteSelecionado)?.numeroLote || loteSelecionado}
+                      </span>
+                    )}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">

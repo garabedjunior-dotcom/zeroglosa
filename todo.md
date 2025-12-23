@@ -101,3 +101,12 @@
 - [x] Atualizar mensagens da IA Copiloto para focar em correção preventiva
 - [x] Revisar textos da Central de Ajuda para destacar prevenção
 - [x] Ajustar landing page para comunicar corretamente o valor da plataforma
+
+## Correções da IA Copiloto - Análise Contextual
+- [x] Modificar rota tRPC ia.chat para receber dados completos do lote selecionado
+- [x] Modificar rota tRPC ia.explicarRisco para usar dados reais do lote
+- [x] Modificar rota tRPC ia.gerarRecurso para usar contexto real da glosa
+- [x] Atualizar frontend para enviar operadora, valor, score, status e regras do lote
+- [x] Melhorar prompts da IA para análise preventiva baseada em dados reais
+- [x] Incluir problemas de validação identificados no contexto da IA
+- [x] Testar IA com lotes reais para validar análise contextual

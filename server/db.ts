@@ -111,6 +111,13 @@ export async function getAllOperadoras() {
   return await db.select().from(operadoras).where(eq(operadoras.ativa, 1)).orderBy(operadoras.nome);
 }
 
+export async function getOperadoraById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(operadoras).where(eq(operadoras.id, id)).limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
 export async function createOperadora(data: InsertOperadora) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");

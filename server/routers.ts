@@ -184,13 +184,47 @@ export const appRouter = router({
         contexto: z.string().optional(),
       }))
       .mutation(async ({ ctx, input }) => {
-        const systemPrompt = `Você é um assistente especializado em gestão de glosas médicas e faturamento TISS. 
-        Ajude o usuário a entender regras de operadoras, validar guias e reduzir glosas.`;
+        let contextoCompleto = "";
+        
+        // Se um lote foi selecionado, buscar dados completos para contexto
+        if (input.loteId) {
+          const lote = await db.getLoteById(input.loteId);
+          if (lote) {
+            const operadora = await db.getOperadoraById(lote.operadoraId);
+            const regras = await db.getRegrasByOperadoraId(lote.operadoraId);
+            
+            contextoCompleto = `\n\nCONTEXTO DO LOTE SELECIONADO:
+- ID do Lote: ${lote.id}
+- Operadora: ${operadora?.nome || 'Não identificada'}
+- Score de Risco: ${lote.scoreRisco ?? 0}% ${(lote.scoreRisco ?? 0) > 70 ? '(ALTO RISCO - REQUER CORREÇÃO URGENTE)' : (lote.scoreRisco ?? 0) > 40 ? '(Risco Médio - Revisar)' : '(Baixo Risco)'}
+- Status: ${lote.status}
+- Valor Total: R$ ${((lote.valorTotal || 0) / 100).toFixed(2)}
+- Quantidade de Guias: ${lote.quantidadeGuias}
+- Origem: ${lote.origem === 'ocr' ? 'Convertido via OCR' : 'Upload XML TISS'}
+- Data de Criação: ${lote.createdAt?.toLocaleDateString('pt-BR')}
+
+REGRAS ATIVAS DA OPERADORA:
+${regras.map(r => `- ${r.tipoRegra.replace(/_/g, ' ').toUpperCase()}: ${r.descricao}`).join('\n') || 'Nenhuma regra cadastrada'}
+
+IMPORTANTE: Sua análise deve ser PREVENTIVA. Identifique problemas que podem causar glosa ANTES do envio à operadora e sugira correções específicas.`;
+          }
+        }
+
+        const systemPrompt = `Você é um assistente especializado em PREVENÇÃO de glosas médicas e validação pré-envio de guias TISS.
+
+Seu objetivo principal é:
+1. Analisar lotes ANTES do envio à operadora
+2. Identificar problemas que podem causar glosa
+3. Sugerir correções específicas e acionáveis
+4. Explicar regras das operadoras de forma clara
+5. Ajudar a evitar retrabalho e perdas financeiras
+
+Quando um lote estiver selecionado, use os dados fornecidos para fazer análises CONCRETAS e ESPECÍFICAS, não genéricas.`;
 
         const response = await invokeLLM({
           messages: [
             { role: "system", content: systemPrompt },
-            { role: "user", content: input.message },
+            { role: "user", content: input.message + contextoCompleto },
           ],
         });
 
@@ -204,7 +238,7 @@ export const appRouter = router({
           tipoInteracao: 'chat',
           pergunta: input.message,
           resposta,
-          contexto: input.contexto,
+          contexto: contextoCompleto || input.contexto,
         });
 
         return { resposta };
@@ -219,17 +253,39 @@ export const appRouter = router({
           throw new Error("Lote não encontrado");
         }
 
-        const prompt = `Analise este lote de guias TISS e explique os principais riscos de glosa:
-        - Score de Risco: ${lote.scoreRisco}%
-        - Status: ${lote.status}
-        - Valor Total: R$ ${(lote.valorTotal || 0) / 100}
-        - Quantidade de Guias: ${lote.quantidadeGuias}
+        const operadora = await db.getOperadoraById(lote.operadoraId);
+        const regras = await db.getRegrasByOperadoraId(lote.operadoraId);
         
-        Forneça uma análise detalhada dos riscos e sugestões de correção.`;
+        const scoreRisco = lote.scoreRisco ?? 0;
+        const nivelRisco = scoreRisco > 70 ? 'ALTO RISCO (CRÍTICO)' : scoreRisco > 40 ? 'RISCO MÉDIO' : 'BAIXO RISCO';
+
+        const prompt = `Analise este lote de guias TISS ANTES DO ENVIO e identifique problemas que podem causar glosa:
+
+DADOS DO LOTE:
+- ID: ${lote.id}
+- Operadora: ${operadora?.nome || 'Não identificada'} (Código: ${operadora?.codigo || 'N/A'})
+- Score de Risco: ${scoreRisco}% - NÍVEL: ${nivelRisco}
+- Status Atual: ${lote.status}
+- Valor Total: R$ ${((lote.valorTotal || 0) / 100).toFixed(2)}
+- Quantidade de Guias: ${lote.quantidadeGuias}
+- Origem: ${lote.origem === 'ocr' ? 'Convertido via OCR (maior risco de erros de extração)' : 'Upload XML TISS'}
+- Criado em: ${lote.createdAt?.toLocaleDateString('pt-BR')}
+
+REGRAS ATIVAS DA OPERADORA ${operadora?.nome || ''}:
+${regras.map(r => `• ${r.tipoRegra.replace(/_/g, ' ').toUpperCase()}: ${r.descricao}${r.codigoTUSS ? ` (TUSS: ${r.codigoTUSS})` : ''}${r.valorMinimo || r.valorMaximo ? ` (Limite: R$ ${(r.valorMinimo || 0)/100} - R$ ${(r.valorMaximo || 999999)/100})` : ''}`).join('\n') || 'Nenhuma regra específica cadastrada - use regras gerais da ANS'}
+
+SUA TAREFA:
+1. Identifique ESPECIFICAMENTE quais regras podem estar sendo violadas
+2. Explique POR QUE o score está em ${scoreRisco}%
+3. Liste PROBLEMAS CONCRETOS que podem causar glosa
+4. Forneça CORREÇÕES ESPECÍFICAS que devem ser feitas ANTES do envio
+5. Priorize as ações por impacto (o que corrigir primeiro)
+
+LEMBRE-SE: O objetivo é PREVENIR a glosa, não recuperar depois. Seja específico e acionável.`;
 
         const response = await invokeLLM({
           messages: [
-            { role: "system", content: "Você é um especialista em auditoria de contas médicas e glosas." },
+            { role: "system", content: "Você é um especialista em PREVENÇÃO de glosas médicas. Sua função é identificar problemas ANTES do envio à operadora e sugerir correções específicas. Seja direto, prático e baseie-se nos dados fornecidos." },
             { role: "user", content: prompt },
           ],
         });
@@ -253,14 +309,38 @@ export const appRouter = router({
         motivoGlosa: z.string(),
       }))
       .mutation(async ({ ctx, input }) => {
-        const prompt = `Gere um texto formal de recurso de glosa médica para o seguinte motivo:
-        "${input.motivoGlosa}"
+        const lote = await db.getLoteById(input.loteId);
+        if (!lote) {
+          throw new Error("Lote não encontrado");
+        }
         
-        O texto deve ser profissional, técnico e persuasivo, citando normas da ANS quando aplicável.`;
+        const operadora = await db.getOperadoraById(lote.operadoraId);
+        
+        const prompt = `Gere um texto formal e profissional de recurso de glosa médica com base nos seguintes dados:
+
+DADOS DO LOTE GLOSADO:
+- Operadora: ${operadora?.nome || 'Não identificada'}
+- Valor do Lote: R$ ${((lote.valorTotal || 0) / 100).toFixed(2)}
+- Quantidade de Guias: ${lote.quantidadeGuias}
+- Data de Criação: ${lote.createdAt?.toLocaleDateString('pt-BR')}
+
+MOTIVO DA GLOSA INFORMADO PELA OPERADORA:
+"${input.motivoGlosa}"
+
+REQUISITOS DO TEXTO:
+1. Iniciar com identificação formal (prestador, lote, operadora)
+2. Descrever o motivo da glosa apresentado pela operadora
+3. Apresentar argumentação técnica contestando a glosa
+4. Citar normas específicas da ANS (RN, RDC) quando aplicável
+5. Solicitar formalmente a reversão da glosa
+6. Manter tom profissional, respeitoso mas firme
+7. Incluir espaço para assinatura e data ao final
+
+IMPORTANTE: Lembre que o ideal é PREVENIR glosas antes do envio. Este recurso só deve ser usado quando a glosa já ocorreu.`;
 
         const response = await invokeLLM({
           messages: [
-            { role: "system", content: "Você é um especialista em recursos de glosas médicas e normas da ANS." },
+            { role: "system", content: "Você é um especialista em recursos de glosas médicas e normas da ANS. Gere textos formais, técnicos e persuasivos para contestação de glosas, sempre citando legislação pertinente." },
             { role: "user", content: prompt },
           ],
         });
