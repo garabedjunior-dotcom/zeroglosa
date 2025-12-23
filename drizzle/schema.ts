@@ -143,3 +143,21 @@ export const interacoesIA = mysqlTable("interacoesIA", {
 
 export type InteracaoIA = typeof interacoesIA.$inferSelect;
 export type InsertInteracaoIA = typeof interacoesIA.$inferInsert;
+
+/**
+ * Validações de lotes TISS
+ */
+export const validacoes = mysqlTable("validacoes", {
+  id: int("id").autoincrement().primaryKey(),
+  loteId: int("loteId").notNull(),
+  tipoValidacao: varchar("tipoValidacao", { length: 100 }).notNull(),
+  campo: varchar("campo", { length: 100 }),
+  status: mysqlEnum("status", ["aprovado", "alerta", "erro"]).notNull(),
+  mensagem: text("mensagem").notNull(),
+  detalhes: text("detalhes"),
+  critico: int("critico").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Validacao = typeof validacoes.$inferSelect;
+export type InsertValidacao = typeof validacoes.$inferInsert;

@@ -15,6 +15,13 @@
       "when": 1766500455970,
       "tag": "0001_fuzzy_maelstrom",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1766503813340,
+      "tag": "0002_omniscient_virginia_dare",
+      "breakpoints": true
     }
   ]
 }

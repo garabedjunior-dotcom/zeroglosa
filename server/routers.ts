@@ -6,6 +6,7 @@ import { z } from "zod";
 import * as db from "./db";
 import { storagePut } from "./storage";
 import { invokeLLM } from "./_core/llm";
+import { TISSParser } from "./tissParser";
 
 export const appRouter = router({
   system: systemRouter,
@@ -364,6 +365,61 @@ IMPORTANTE: Lembre que o ideal é PREVENIR glosas antes do envio. Este recurso s
     kpis: protectedProcedure.query(async ({ ctx }) => {
       return await db.getDashboardKPIs(ctx.user.id);
     }),
+  }),
+
+  validacoes: router({
+    validarLote: protectedProcedure
+      .input(z.object({
+        loteId: z.number(),
+        xmlContent: z.string(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const lote = await db.getLoteById(input.loteId);
+        if (!lote) {
+          throw new Error("Lote n\u00e3o encontrado");
+        }
+
+        // Executar parser TISS
+        const parser = new TISSParser();
+        const result = await parser.parse(input.xmlContent);
+
+        // Limpar valida\u00e7\u00f5es antigas deste lote
+        await db.deleteValidacoesByLoteId(input.loteId);
+
+        // Salvar novas valida\u00e7\u00f5es no banco
+        for (const validation of result.validations) {
+          await db.createValidacao({
+            loteId: input.loteId,
+            tipoValidacao: validation.tipoValidacao,
+            campo: validation.campo,
+            status: validation.status,
+            mensagem: validation.mensagem,
+            detalhes: validation.detalhes || null,
+            critico: validation.critico ? 1 : 0,
+          });
+        }
+
+        // Calcular novo score de risco baseado nas valida\u00e7\u00f5es
+        const totalValidacoes = result.validations.length;
+        const erros = result.validations.filter(v => v.status === 'erro').length;
+        const alertas = result.validations.filter(v => v.status === 'alerta').length;
+        const scoreRisco = Math.min(100, Math.round((erros * 30 + alertas * 10) / Math.max(1, totalValidacoes) * 100));
+
+        // Atualizar score do lote
+        await db.updateLote(input.loteId, { scoreRisco });
+
+        return {
+          valid: result.valid,
+          validations: result.validations,
+          scoreRisco,
+          data: result.data,
+        };
+      }),
+    getByLoteId: protectedProcedure
+      .input(z.object({ loteId: z.number() }))
+      .query(async ({ input }) => {
+        return await db.getValidacoesByLoteId(input.loteId);
+      }),
   }),
 });
 

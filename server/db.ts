@@ -9,12 +9,14 @@ import {
   regras, 
   conversoesOCR, 
   interacoesIA,
+  validacoes,
   InsertOperadora,
   InsertLote,
   InsertGuia,
   InsertRegra,
   InsertConversaoOCR,
-  InsertInteracaoIA
+  InsertInteracaoIA,
+  InsertValidacao
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -253,4 +255,25 @@ export async function getDashboardKPIs(userId: number) {
     valorGlosado,
     valorRecuperado: valorTotal - valorGlosado,
   };
+}
+
+// Validações
+export async function createValidacao(data: InsertValidacao) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(validacoes).values(data);
+  return true;
+}
+
+export async function getValidacoesByLoteId(loteId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(validacoes).where(eq(validacoes.loteId, loteId)).orderBy(desc(validacoes.createdAt));
+}
+
+export async function deleteValidacoesByLoteId(loteId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(validacoes).where(eq(validacoes.loteId, loteId));
+  return true;
 }

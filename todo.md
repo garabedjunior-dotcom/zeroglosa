@@ -117,3 +117,19 @@
 - [x] Criar checklist de pré-envio interativo com validações
 - [x] Adicionar rota para detalhes do lote no App.tsx
 - [x] Testar upload de imagem e preview no OCR
+
+## Parser de XML TISS e Validação Automática
+- [x] Criar tabela de validações no banco de dados
+- [x] Implementar parser de XML TISS no backend
+- [x] Validar estrutura básica do XML (tags obrigatórias)
+- [x] Validar campos obrigatórios: CPF, nome paciente, carteirinha
+- [x] Validar código TUSS (formato e existência)
+- [x] Validar CID (formato e compatibilidade)
+- [x] Validar valores e limites
+- [x] Validar datas (formato e validade)
+- [x] Validar CRM do médico
+- [x] Criar rota tRPC para executar validação
+- [x] Salvar resultados de validação no banco
+- [x] Integrar validação automática na página de detalhes do lote
+- [x] Atualizar checklist automaticamente com resultados
+- [x] Testar parser com XML TISS de exemplo

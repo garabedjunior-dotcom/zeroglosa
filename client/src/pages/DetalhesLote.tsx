@@ -19,7 +19,7 @@ import {
   Eye
 } from "lucide-react";
 import { Link, useParams } from "wouter";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 interface ChecklistItem {
@@ -48,16 +48,64 @@ export default function DetalhesLote() {
     { enabled: !!lote }
   );
 
-  const [checklist, setChecklist] = useState<ChecklistItem[]>([
-    { id: '1', label: 'Todos os campos obrigatórios preenchidos', checked: false, critico: true },
-    { id: '2', label: 'CPF do paciente válido', checked: false, critico: true },
-    { id: '3', label: 'Código TUSS correto e atualizado', checked: false, critico: true },
-    { id: '4', label: 'CID compatível com procedimento', checked: false, critico: true },
-    { id: '5', label: 'Autorização prévia anexada (se necessário)', checked: false, critico: true },
-    { id: '6', label: 'Valor dentro dos limites da operadora', checked: false, critico: false },
-    { id: '7', label: 'Data do procedimento válida', checked: false, critico: false },
-    { id: '8', label: 'CRM do médico executante informado', checked: false, critico: false },
-  ]);
+  const { data: validacoes } = trpc.validacoes.getByLoteId.useQuery(
+    { loteId },
+    { enabled: loteId > 0 }
+  );
+
+  // Gerar checklist baseado nas validações do banco
+  const checklistFromValidacoes = (): ChecklistItem[] => {
+    if (!validacoes || validacoes.length === 0) {
+      // Checklist padrão se não houver validações
+      return [
+        { id: '1', label: 'Todos os campos obrigatórios preenchidos', checked: false, critico: true },
+        { id: '2', label: 'CPF do paciente válido', checked: false, critico: true },
+        { id: '3', label: 'Código TUSS correto e atualizado', checked: false, critico: true },
+        { id: '4', label: 'CID compatível com procedimento', checked: false, critico: true },
+        { id: '5', label: 'Autorização prévia anexada (se necessário)', checked: false, critico: true },
+        { id: '6', label: 'Valor dentro dos limites da operadora', checked: false, critico: false },
+        { id: '7', label: 'Data do procedimento válida', checked: false, critico: false },
+        { id: '8', label: 'CRM do médico executante informado', checked: false, critico: false },
+      ];
+    }
+
+    // Mapear validações para checklist
+    const items: ChecklistItem[] = [];
+    let idCounter = 1;
+
+    // Agrupar validações por tipo
+    const validacoesPorTipo = validacoes.reduce((acc, v) => {
+      const key = v.campo || v.tipoValidacao;
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(v);
+      return acc;
+    }, {} as Record<string, typeof validacoes>);
+
+    // Criar item de checklist para cada grupo
+    Object.entries(validacoesPorTipo).forEach(([key, vals]) => {
+      const temErro = vals.some(v => v.status === 'erro');
+      const critico = vals.some(v => v.critico === 1);
+      const aprovado = vals.every(v => v.status === 'aprovado');
+
+      items.push({
+        id: String(idCounter++),
+        label: vals[0]?.mensagem || key,
+        checked: aprovado,
+        critico,
+      });
+    });
+
+    return items;
+  };
+
+  const [checklist, setChecklist] = useState<ChecklistItem[]>(checklistFromValidacoes());
+
+  // Atualizar checklist quando validações mudarem
+  useEffect(() => {
+    if (validacoes) {
+      setChecklist(checklistFromValidacoes());
+    }
+  }, [validacoes]);
 
   const toggleChecklistItem = (id: string) => {
     setChecklist(prev => prev.map(item => 
