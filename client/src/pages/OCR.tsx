@@ -233,12 +233,22 @@ export default function OCR() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="relative rounded-lg overflow-hidden border">
-                    <img 
-                      src={imagemPreview} 
-                      alt="Preview da fatura" 
-                      className="w-full h-auto max-h-96 object-contain bg-muted"
-                    />
+                  <div className="relative rounded-lg overflow-hidden border bg-muted">
+                    {imagemPreview ? (
+                      <img 
+                        src={imagemPreview} 
+                        alt="Preview da fatura" 
+                        className="w-full h-auto max-h-96 object-contain"
+                        onError={(e) => {
+                          console.error('Erro ao carregar imagem:', e);
+                          toast.error('Erro ao carregar preview da imagem');
+                        }}
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-96 text-muted-foreground">
+                        <p>Carregando preview...</p>
+                      </div>
+                    )}
                   </div>
                   <div className="flex gap-2">
                     <Button

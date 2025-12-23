@@ -110,3 +110,10 @@
 - [x] Melhorar prompts da IA para análise preventiva baseada em dados reais
 - [x] Incluir problemas de validação identificados no contexto da IA
 - [x] Testar IA com lotes reais para validar análise contextual
+
+## Correções e Funcionalidades Faltantes - Módulo Lotes
+- [x] Corrigir preview da imagem no OCR (imagem não aparece)
+- [x] Implementar página de visualização detalhada de lote individual
+- [x] Criar checklist de pré-envio interativo com validações
+- [x] Adicionar rota para detalhes do lote no App.tsx
+- [x] Testar upload de imagem e preview no OCR

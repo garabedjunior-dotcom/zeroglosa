@@ -232,7 +232,7 @@ export default function Lotes() {
                       </div>
 
                       <div className="flex flex-col gap-2">
-                        <Link href={`/lotes/${lote.id}`}>
+                        <Link href={`/lote/${lote.id}`}>
                           <Button variant="outline" size="sm" className="gap-2">
                             <Eye className="h-4 w-4" />
                             Ver Detalhes

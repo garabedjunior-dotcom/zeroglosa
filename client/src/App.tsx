@@ -5,6 +5,7 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
+import DetalhesLote from "./pages/DetalhesLote";
 import Dashboard from "./pages/Dashboard";
 import Lotes from "./pages/Lotes";
 import NovoLote from "./pages/NovoLote";
@@ -24,7 +25,7 @@ function Router() {
       <Route path={"/ocr"} component={OCR} />
       <Route path={"/regras"} component={Regras} />
       <Route path={"/ia"} component={IACopiloto} />
-      <Route path={"/ajuda"} component={Ajuda} />
+      <Route path="/lote/:id" component={DetalhesLote} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
