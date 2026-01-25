@@ -158,22 +158,22 @@ export default function DetalhesLote() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="border-b bg-card">
-        <div className="container py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+        <div className="container py-4 sm:py-6 px-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
               <Link href="/lotes">
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" className="shrink-0">
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
               </Link>
-              <div>
-                <h1 className="text-3xl font-bold">Lote #{lote.numeroLote || lote.id}</h1>
-                <p className="text-muted-foreground">
-                  {operadora?.nome || 'Operadora não identificada'} • Criado em {lote.createdAt?.toLocaleDateString('pt-BR')}
+              <div className="flex-1 min-w-0">
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold truncate">Lote #{lote.numeroLote || lote.id}</h1>
+                <p className="text-xs sm:text-sm text-muted-foreground truncate">
+                  {operadora?.nome || 'Operadora não identificada'} • {lote.createdAt?.toLocaleDateString('pt-BR')}
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
               <Badge className={statusColor}>
                 {lote.status.toUpperCase()}
               </Badge>
@@ -182,8 +182,8 @@ export default function DetalhesLote() {
         </div>
       </div>
 
-      <div className="container py-8">
-        <div className="grid gap-6 lg:grid-cols-3">
+      <div className="container py-6 sm:py-8 px-4">
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-3">
           {/* Coluna Principal */}
           <div className="lg:col-span-2 space-y-6">
             {/* Score de Risco */}

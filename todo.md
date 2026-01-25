@@ -133,3 +133,17 @@
 - [x] Integrar validação automática na página de detalhes do lote
 - [x] Atualizar checklist automaticamente com resultados
 - [x] Testar parser com XML TISS de exemplo
+
+## Responsividade Mobile
+- [x] Corrigir navegação para mobile (menu hamburguer)
+- [x] Ajustar landing page (Home) para telas pequenas
+- [x] Corrigir grid de KPIs no Dashboard para empilhar em mobile
+- [x] Ajustar gráficos do Dashboard para mobile
+- [x] Corrigir tabela de lotes para scroll horizontal em mobile
+- [x] Ajustar formulário de upload de XML para mobile
+- [x] Corrigir página de OCR para mobile (preview e formulário)
+- [x] Ajustar página de Regras para mobile (tabela e formulário)
+- [x] Corrigir página de Detalhes do Lote para mobile (tabs e checklist)
+- [x] Ajustar IA Copiloto para mobile (chat e seletor de lote)
+- [x] Corrigir página de Ajuda para mobile
+- [x] Testar em diferentes breakpoints (320px, 375px, 768px, 1024px)

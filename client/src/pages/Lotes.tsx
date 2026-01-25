@@ -86,17 +86,17 @@ export default function Lotes() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-card">
-        <div className="container py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+        <div className="container py-4 sm:py-6 px-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
               <Link href="/dashboard">
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" className="shrink-0">
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
               </Link>
-              <div>
-                <h1 className="text-3xl font-bold text-foreground">Lotes & Glosas</h1>
-                <p className="text-muted-foreground mt-1">Gerencie seus lotes de guias TISS</p>
+              <div className="flex-1">
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Lotes & Glosas</h1>
+                <p className="text-sm sm:text-base text-muted-foreground mt-1">Gerencie seus lotes de guias TISS</p>
               </div>
             </div>
             <Link href="/lotes/novo">
@@ -110,9 +110,9 @@ export default function Lotes() {
       </header>
 
       {/* Main Content */}
-      <main className="container py-8">
+      <main className="container py-6 sm:py-8 px-4">
         {/* Filtros */}
-        <Card className="mb-6">
+        <Card className="mb-4 sm:mb-6">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Filter className="h-5 w-5" />
@@ -120,7 +120,7 @@ export default function Lotes() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-3">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Buscar</label>
                 <div className="relative">
@@ -180,18 +180,18 @@ export default function Lotes() {
               
               return (
                 <Card key={lote.id} className="hover:shadow-md transition-shadow">
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-lg font-semibold">
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+                      <div className="flex-1 w-full">
+                        <div className="flex flex-wrap items-center gap-2 mb-3">
+                          <h3 className="text-base sm:text-lg font-semibold">
                             Lote #{lote.numeroLote || lote.id}
                           </h3>
                           {getStatusBadge(lote.status)}
                           {getOrigemBadge(lote.origem)}
                         </div>
                         
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-3 sm:mt-4">
                           <div>
                             <p className="text-sm text-muted-foreground">Operadora</p>
                             <p className="font-medium">{operadora?.nome || "N/A"}</p>

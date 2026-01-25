@@ -30,18 +30,18 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <header className="border-b bg-card">
-        <div className="container py-4">
+        <div className="container py-4 px-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Shield className="h-8 w-8 text-primary" />
-              <span className="text-2xl font-bold text-foreground">ZeroGlosa</span>
+              <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
+              <span className="text-xl sm:text-2xl font-bold text-foreground">ZeroGlosa</span>
             </div>
-            <div className="flex items-center gap-4">
-              <a href={getLoginUrl()} className="text-sm text-muted-foreground hover:text-foreground">
+            <div className="flex items-center gap-2 sm:gap-4">
+              <a href={getLoginUrl()} className="text-xs sm:text-sm text-muted-foreground hover:text-foreground hidden sm:inline">
                 Entrar
               </a>
               <a href={getLoginUrl()}>
-                <Button>Começar Agora</Button>
+                <Button size="sm" className="sm:size-default">Começar</Button>
               </a>
             </div>
           </div>
@@ -49,22 +49,22 @@ export default function Home() {
       </header>
 
       {/* Hero Banner */}
-      <section className="py-20 bg-gradient-to-br from-primary/5 via-background to-accent/5">
-        <div className="container">
+      <section className="py-12 sm:py-20 bg-gradient-to-br from-primary/5 via-background to-accent/5">
+        <div className="container px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-5xl font-bold text-foreground mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4 sm:mb-6">
               Evite Glosas Médicas com <span className="text-primary">Validação Inteligente</span>
             </h1>
-            <p className="text-xl text-muted-foreground mb-8">
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 sm:mb-8 px-4">
               Plataforma completa que valida guias TISS antes do envio, identifica problemas automaticamente e previne glosas com inteligência artificial.
             </p>
-            <div className="flex gap-4 justify-center">
-              <a href={getLoginUrl()}>
-                <Button size="lg" className="gap-2">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
+              <a href={getLoginUrl()} className="w-full sm:w-auto">
+                <Button size="lg" className="gap-2 w-full sm:w-auto">
                   Começar Gratuitamente <ArrowRight className="h-5 w-5" />
                 </Button>
               </a>
-              <Button size="lg" variant="outline">
+              <Button size="lg" variant="outline" className="w-full sm:w-auto">
                 Ver Demonstração
               </Button>
             </div>
@@ -73,9 +73,9 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-card">
-        <div className="container">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <section className="py-12 sm:py-16 bg-card">
+        <div className="container px-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 text-center">
             <div>
               <div className="text-4xl font-bold text-primary mb-2">47-68%</div>
               <div className="text-sm text-muted-foreground">Menos Glosas</div>
@@ -97,16 +97,16 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20">
-        <div className="container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">Funcionalidades Principais</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+      <section className="py-12 sm:py-20">
+        <div className="container px-4">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 sm:mb-4">Funcionalidades Principais</h2>
+            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
               Validação automática antes do envio para prevenir glosas e otimizar seu faturamento
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             <Card className="border-2 hover:border-primary transition-colors">
               <CardHeader>
                 <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
@@ -183,16 +183,16 @@ export default function Home() {
       </section>
 
       {/* How it Works */}
-      <section className="py-20 bg-muted/30">
-        <div className="container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">Como Funciona</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+      <section className="py-12 sm:py-20 bg-muted/30">
+        <div className="container px-4">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 sm:mb-4">Como Funciona</h2>
+            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
               Processo simples em 3 passos para reduzir suas glosas
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-3 gap-6 sm:gap-8">
             <div className="text-center">
               <div className="h-16 w-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl font-bold mx-auto mb-4">
                 1

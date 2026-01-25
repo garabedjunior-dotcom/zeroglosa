@@ -53,28 +53,28 @@ export default function Dashboard() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-card">
-        <div className="container py-6">
-          <div className="flex items-center justify-between">
+        <div className="container py-4 sm:py-6 px-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-foreground">ZeroGlosa</h1>
-              <p className="text-muted-foreground mt-1">Gestão Inteligente de Glosas Médicas</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-foreground">ZeroGlosa</h1>
+              <p className="text-sm sm:text-base text-muted-foreground mt-1">Gestão Inteligente de Glosas Médicas</p>
             </div>
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-muted-foreground">Olá, {user?.name || 'Usuário'}</span>
-              <Link href="/lotes">
-                <Button variant="outline">
-                  <FileText className="h-4 w-4 mr-2" />
-                  Lotes
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4 w-full sm:w-auto">
+              <span className="text-xs sm:text-sm text-muted-foreground hidden md:inline">Olá, {user?.name || 'Usuário'}</span>
+              <Link href="/lotes" className="flex-1 sm:flex-none">
+                <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                  <FileText className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Lotes</span>
                 </Button>
               </Link>
-              <Link href="/regras">
-                <Button variant="outline">Regras</Button>
+              <Link href="/regras" className="flex-1 sm:flex-none">
+                <Button variant="outline" size="sm" className="w-full sm:w-auto">Regras</Button>
               </Link>
-              <Link href="/ia">
-                <Button variant="outline">IA Copiloto</Button>
+              <Link href="/ia" className="flex-1 sm:flex-none">
+                <Button variant="outline" size="sm" className="w-full sm:w-auto hidden sm:inline-flex">IA Copiloto</Button>
               </Link>
-              <Link href="/ajuda">
-                <Button variant="outline">Ajuda</Button>
+              <Link href="/ajuda" className="flex-1 sm:flex-none">
+                <Button variant="outline" size="sm" className="w-full sm:w-auto">Ajuda</Button>
               </Link>
             </div>
           </div>
@@ -82,9 +82,9 @@ export default function Dashboard() {
       </header>
 
       {/* Main Content */}
-      <main className="container py-8">
+      <main className="container py-6 sm:py-8 px-4">
         {/* KPIs */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-6 sm:mb-8">
           <Card className="border-l-4 border-l-primary">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
@@ -144,10 +144,10 @@ export default function Dashboard() {
         <Card className="mb-8">
           <CardHeader>
             <CardTitle>Ações Rápidas</CardTitle>
-            <CardDescription>Acesse rapidamente as principais funcionalidades</CardDescription>
+            <CardDescription>Converta suas faturas, use o pré-envio e confirme as informações do arquivo</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-3">
               <Link href="/lotes/novo">
                 <Button className="w-full h-24 flex flex-col gap-2" variant="outline">
                   <Upload className="h-8 w-8" />
@@ -171,22 +171,24 @@ export default function Dashboard() {
         </Card>
 
         {/* Gráficos */}
-        <div className="grid gap-6 md:grid-cols-2 mb-8">
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2 mb-6 sm:mb-8">
           <Card>
             <CardHeader>
               <CardTitle>Status dos Lotes</CardTitle>
               <CardDescription>Distribuição por status atual</CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={statusData}>
+              <div className="w-full overflow-x-auto">
+                <ResponsiveContainer width="100%" height={250} minWidth={300}>
+                  <BarChart data={statusData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip />
                   <Bar dataKey="value" fill="oklch(0.62 0.18 250)" />
-                </BarChart>
-              </ResponsiveContainer>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
 
@@ -196,8 +198,9 @@ export default function Dashboard() {
               <CardDescription>XML vs OCR</CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
+              <div className="w-full overflow-x-auto flex justify-center">
+                <ResponsiveContainer width="100%" height={250} minWidth={300}>
+                  <PieChart>
                   <Pie
                     data={origemData}
                     cx="50%"
@@ -213,8 +216,9 @@ export default function Dashboard() {
                     ))}
                   </Pie>
                   <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
         </div>

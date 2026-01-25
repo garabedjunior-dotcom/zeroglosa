@@ -177,8 +177,8 @@ export default function OCR() {
       </header>
 
       {/* Main Content */}
-      <main className="container py-8 max-w-6xl">
-        <div className="grid gap-6 lg:grid-cols-2">
+      <main className="container py-6 sm:py-8 px-4">
+        <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
           {/* Upload e Preview */}
           <Card>
             <CardHeader>
@@ -238,7 +238,7 @@ export default function OCR() {
                       <img 
                         src={imagemPreview} 
                         alt="Preview da fatura" 
-                        className="w-full h-auto max-h-96 object-contain"
+                        className="w-full h-auto max-h-64 sm:max-h-96 object-contain"
                         onError={(e) => {
                           console.error('Erro ao carregar imagem:', e);
                           toast.error('Erro ao carregar preview da imagem');
@@ -250,7 +250,7 @@ export default function OCR() {
                       </div>
                     )}
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Button
                       variant="outline"
                       onClick={() => {
@@ -259,14 +259,14 @@ export default function OCR() {
                         setDadosExtraidos(null);
                         setEditando(false);
                       }}
-                      className="flex-1"
+                      className="flex-1 w-full"
                     >
                       Trocar Imagem
                     </Button>
                     <Button
                       onClick={handleProcessarOCR}
                       disabled={processando || !!dadosExtraidos}
-                      className="flex-1 gap-2"
+                      className="flex-1 w-full gap-2"
                     >
                       {processando ? (
                         <>
