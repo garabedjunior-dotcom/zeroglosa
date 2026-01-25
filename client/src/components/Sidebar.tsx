@@ -49,7 +49,7 @@ export default function Sidebar({ className }: SidebarProps) {
       <Button
         variant="default"
         size="icon"
-        className="fixed top-4 left-4 z-[100] lg:hidden shadow-lg"
+        className="fixed top-4 right-4 z-[100] lg:hidden shadow-lg"
         onClick={() => setIsOpen(!isOpen)}
       >
         {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}

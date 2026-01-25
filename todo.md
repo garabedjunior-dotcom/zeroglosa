@@ -168,3 +168,6 @@
 ## Correção do Botão Menu Mobile
 - [x] Ajustar z-index do botão do menu para ficar acima dos headers
 - [x] Testar visibilidade em todas as páginas mobile
+
+## Reposicionamento do Botão Menu Mobile
+- [x] Mover botão do menu de left-4 para right-4 (lado direito)
