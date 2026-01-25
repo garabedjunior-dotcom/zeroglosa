@@ -18,13 +18,6 @@ import { useEffect } from "react";
 
 export default function Home() {
   const { user, isAuthenticated } = useAuth();
-  const [, setLocation] = useLocation();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      setLocation("/dashboard");
-    }
-  }, [isAuthenticated, setLocation]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -42,12 +35,20 @@ export default function Home() {
                   Explorar
                 </Button>
               </Link>
-              <a href={getLoginUrl()} className="text-xs sm:text-sm text-muted-foreground hover:text-foreground hidden sm:inline">
-                Entrar
-              </a>
-              <a href={getLoginUrl()}>
-                <Button size="sm" className="sm:size-default">Começar</Button>
-              </a>
+              {isAuthenticated ? (
+                <Link href="/dashboard">
+                  <Button size="sm" className="sm:size-default">Ir para Dashboard</Button>
+                </Link>
+              ) : (
+                <>
+                  <a href={getLoginUrl()} className="text-xs sm:text-sm text-muted-foreground hover:text-foreground hidden sm:inline">
+                    Entrar
+                  </a>
+                  <a href={getLoginUrl()}>
+                    <Button size="sm" className="sm:size-default">Começar</Button>
+                  </a>
+                </>
+              )}
             </div>
           </div>
         </div>

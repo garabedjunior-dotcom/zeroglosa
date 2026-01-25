@@ -178,3 +178,8 @@
 
 ## Botão de Retorno na Landing Page
 - [x] Adicionar link "Voltar" ou "Explorar sem Login" na landing page
+
+## Correção Landing Page Acessível
+- [x] Remover redirecionamento automático para Dashboard na landing page
+- [x] Tornar rota "/" acessível sem login
+- [x] Mover Dashboard para rota protegida "/dashboard"

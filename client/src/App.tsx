@@ -18,8 +18,7 @@ function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
-      <Route path={"/"} component={Dashboard} />
-      <Route path={"/sobre"} component={Home} />
+      <Route path={"/"} component={Home} />
       <Route path={"/dashboard"} component={Dashboard} />
       <Route path={"/lotes"} component={Lotes} />
       <Route path={"/lotes/novo"} component={NovoLote} />
