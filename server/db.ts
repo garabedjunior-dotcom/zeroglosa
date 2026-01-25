@@ -144,8 +144,10 @@ export async function getLoteById(id: number) {
 export async function createLote(data: InsertLote) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  await db.insert(lotes).values(data);
-  return true;
+  const result = await db.insert(lotes).values(data);
+  const insertId = result[0].insertId;
+  const created = await db.select().from(lotes).where(eq(lotes.id, insertId)).limit(1);
+  return created[0];
 }
 
 export async function updateLote(id: number, data: Partial<InsertLote>) {
@@ -164,8 +166,10 @@ export async function getGuiasByLoteId(loteId: number) {
 export async function createGuia(data: InsertGuia) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  await db.insert(guias).values(data);
-  return true;
+  const result = await db.insert(guias).values(data);
+  const insertId = result[0].insertId;
+  const created = await db.select().from(guias).where(eq(guias.id, insertId)).limit(1);
+  return created[0];
 }
 
 export async function updateGuia(id: number, data: Partial<InsertGuia>) {
@@ -277,3 +281,4 @@ export async function deleteValidacoesByLoteId(loteId: number) {
   await db.delete(validacoes).where(eq(validacoes.loteId, loteId));
   return true;
 }
+

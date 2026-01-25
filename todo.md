@@ -190,3 +190,13 @@
 ## Correção Link Ver Detalhes
 - [x] Corrigir link de /lote/:id para /lotes/:id na página Lotes
 - [x] Marcar itens 28 e 30 como concluídos
+
+## Edição Inline de Dados do Lote
+- [x] Adicionar campos editáveis ao schema de lotes (xmlData JSON)
+- [x] Criar rota tRPC para atualizar dados do lote
+- [x] Implementar UI de edição inline na página DetalhesLote
+- [x] Adicionar campos editáveis: CPF, nome paciente, carteirinha, TUSS, CID, valor
+- [x] Validação em tempo real (CPF, TUSS, CID)
+- [x] Feedback visual de sucesso/erro ao salvar
+- [x] Testes unitários para rotas de edição de guias
+- [ ] Revalidar lote automaticamente após edição

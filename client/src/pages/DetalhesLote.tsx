@@ -8,7 +8,9 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
 import { 
   ArrowLeft, 
   AlertTriangle, 
@@ -17,11 +19,12 @@ import {
   FileText,
   Send,
   Download,
-  Eye
+  Eye,
+  Edit2,
+  Save
 } from "lucide-react";
 import { Link, useParams } from "wouter";
 import { useState, useEffect } from "react";
-import { toast } from "sonner";
 
 interface ChecklistItem {
   id: string;
@@ -53,6 +56,105 @@ export default function DetalhesLote() {
     { loteId },
     { enabled: loteId > 0 }
   );
+
+  const { data: guias = [], refetch: refetchGuias } = trpc.guias.listByLote.useQuery(
+    { loteId },
+    { enabled: loteId > 0 }
+  );
+
+  const updateGuiaMutation = trpc.guias.update.useMutation({
+    onSuccess: () => {
+      refetchGuias();
+      setEditingGuiaId(null);
+      toast.success('Dados atualizados com sucesso!');
+    },
+    onError: (error) => {
+      toast.error('Erro ao atualizar dados: ' + error.message);
+    },
+  });
+
+  const [editingGuiaId, setEditingGuiaId] = useState<number | null>(null);
+  const [editFormData, setEditFormData] = useState<any>({});
+
+  const handleEditGuia = (guia: any) => {
+    setEditingGuiaId(guia.id);
+    setEditFormData({
+      cpfPaciente: guia.cpfPaciente || '',
+      nomePaciente: guia.nomePaciente || '',
+      numeroCarteirinha: guia.numeroCarteirinha || '',
+      codigoTUSS: guia.codigoTUSS || '',
+      cid: guia.cid || '',
+      valorProcedimento: guia.valorProcedimento || 0,
+      nomeMedico: guia.nomeMedico || '',
+      crm: guia.crm || '',
+    });
+  };
+
+  const handleSaveGuia = async (guiaId: number) => {
+    await updateGuiaMutation.mutateAsync({
+      id: guiaId,
+      ...editFormData,
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingGuiaId(null);
+    setEditFormData({});
+  };
+
+  // Validações em tempo real
+  const validateCPF = (cpf: string): boolean => {
+    const cleaned = cpf.replace(/\D/g, '');
+    if (cleaned.length !== 11) return false;
+    
+    // Verifica se todos os dígitos são iguais
+    if (/^(\d)\1{10}$/.test(cleaned)) return false;
+    
+    // Valida dígitos verificadores
+    let sum = 0;
+    for (let i = 0; i < 9; i++) {
+      sum += parseInt(cleaned.charAt(i)) * (10 - i);
+    }
+    let digit = 11 - (sum % 11);
+    if (digit >= 10) digit = 0;
+    if (digit !== parseInt(cleaned.charAt(9))) return false;
+    
+    sum = 0;
+    for (let i = 0; i < 10; i++) {
+      sum += parseInt(cleaned.charAt(i)) * (11 - i);
+    }
+    digit = 11 - (sum % 11);
+    if (digit >= 10) digit = 0;
+    if (digit !== parseInt(cleaned.charAt(10))) return false;
+    
+    return true;
+  };
+
+  const validateTUSS = (tuss: string): boolean => {
+    const cleaned = tuss.replace(/\D/g, '');
+    return cleaned.length === 8;
+  };
+
+  const validateCID = (cid: string): boolean => {
+    // Formato: A00.0 ou A00
+    return /^[A-Z]\d{2}(\.\d)?$/.test(cid.toUpperCase());
+  };
+
+  const getFieldError = (field: string, value: string): string | null => {
+    switch (field) {
+      case 'cpfPaciente':
+        if (!value) return null;
+        return validateCPF(value) ? null : 'CPF inválido';
+      case 'codigoTUSS':
+        if (!value) return null;
+        return validateTUSS(value) ? null : 'TUSS deve ter 8 dígitos';
+      case 'cid':
+        if (!value) return null;
+        return validateCID(value) ? null : 'CID inválido (ex: A00.0)';
+      default:
+        return null;
+    }
+  };
 
   // Gerar checklist baseado nas validações do banco
   const checklistFromValidacoes = (): ChecklistItem[] => {
@@ -215,8 +317,9 @@ export default function DetalhesLote() {
 
             {/* Tabs */}
             <Tabs defaultValue="resumo" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="resumo">Resumo</TabsTrigger>
+                <TabsTrigger value="editar">Editar Dados</TabsTrigger>
                 <TabsTrigger value="checklist">Checklist Pré-Envio</TabsTrigger>
                 <TabsTrigger value="regras">Regras Aplicadas</TabsTrigger>
               </TabsList>
@@ -282,6 +385,186 @@ export default function DetalhesLote() {
                     </AlertDescription>
                   </Alert>
                 )}
+              </TabsContent>
+
+              {/* Tab Editar Dados */}
+              <TabsContent value="editar" className="space-y-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Editar Dados das Guias</CardTitle>
+                    <CardDescription>
+                      Clique em "Editar" para corrigir informações das guias antes do envio
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {guias.length === 0 ? (
+                      <p className="text-sm text-muted-foreground text-center py-8">
+                        Nenhuma guia encontrada neste lote.
+                      </p>
+                    ) : (
+                      <div className="space-y-4">
+                        {guias.map((guia) => (
+                          <Card key={guia.id} className="border-2">
+                            <CardHeader className="pb-3">
+                              <div className="flex items-center justify-between">
+                                <CardTitle className="text-base">Guia #{guia.id}</CardTitle>
+                                {editingGuiaId === guia.id ? (
+                                  <div className="flex gap-2">
+                                    <Button
+                                      size="sm"
+                                      onClick={() => handleSaveGuia(guia.id)}
+                                      disabled={updateGuiaMutation.isPending}
+                                    >
+                                      <Save className="h-4 w-4 mr-1" />
+                                      Salvar
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={handleCancelEdit}
+                                      disabled={updateGuiaMutation.isPending}
+                                    >
+                                      Cancelar
+                                    </Button>
+                                  </div>
+                                ) : (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => handleEditGuia(guia)}
+                                  >
+                                    <Edit2 className="h-4 w-4 mr-1" />
+                                    Editar
+                                  </Button>
+                                )}
+                              </div>
+                            </CardHeader>
+                            <CardContent>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                  <label className="text-sm font-medium text-muted-foreground">CPF do Paciente</label>
+                                  {editingGuiaId === guia.id ? (
+                                    <div>
+                                      <Input
+                                        value={editFormData.cpfPaciente}
+                                        onChange={(e) => setEditFormData({ ...editFormData, cpfPaciente: e.target.value })}
+                                        placeholder="000.000.000-00"
+                                        className={`mt-1 ${getFieldError('cpfPaciente', editFormData.cpfPaciente) ? 'border-red-500' : ''}`}
+                                      />
+                                      {getFieldError('cpfPaciente', editFormData.cpfPaciente) && (
+                                        <p className="text-xs text-red-500 mt-1">{getFieldError('cpfPaciente', editFormData.cpfPaciente)}</p>
+                                      )}
+                                    </div>
+                                  ) : (
+                                    <p className="text-sm mt-1">{guia.cpfPaciente || 'N/A'}</p>
+                                  )}
+                                </div>
+                                <div>
+                                  <label className="text-sm font-medium text-muted-foreground">Nome do Paciente</label>
+                                  {editingGuiaId === guia.id ? (
+                                    <Input
+                                      value={editFormData.nomePaciente}
+                                      onChange={(e) => setEditFormData({ ...editFormData, nomePaciente: e.target.value })}
+                                      className="mt-1"
+                                    />
+                                  ) : (
+                                    <p className="text-sm mt-1">{guia.nomePaciente || 'N/A'}</p>
+                                  )}
+                                </div>
+                                <div>
+                                  <label className="text-sm font-medium text-muted-foreground">Carteirinha</label>
+                                  {editingGuiaId === guia.id ? (
+                                    <Input
+                                      value={editFormData.numeroCarteirinha}
+                                      onChange={(e) => setEditFormData({ ...editFormData, numeroCarteirinha: e.target.value })}
+                                      className="mt-1"
+                                    />
+                                  ) : (
+                                    <p className="text-sm mt-1">{guia.numeroCarteirinha || 'N/A'}</p>
+                                  )}
+                                </div>
+                                <div>
+                                  <label className="text-sm font-medium text-muted-foreground">Código TUSS</label>
+                                  {editingGuiaId === guia.id ? (
+                                    <div>
+                                      <Input
+                                        value={editFormData.codigoTUSS}
+                                        onChange={(e) => setEditFormData({ ...editFormData, codigoTUSS: e.target.value })}
+                                        placeholder="8 dígitos"
+                                        className={`mt-1 ${getFieldError('codigoTUSS', editFormData.codigoTUSS) ? 'border-red-500' : ''}`}
+                                      />
+                                      {getFieldError('codigoTUSS', editFormData.codigoTUSS) && (
+                                        <p className="text-xs text-red-500 mt-1">{getFieldError('codigoTUSS', editFormData.codigoTUSS)}</p>
+                                      )}
+                                    </div>
+                                  ) : (
+                                    <p className="text-sm mt-1">{guia.codigoTUSS || 'N/A'}</p>
+                                  )}
+                                </div>
+                                <div>
+                                  <label className="text-sm font-medium text-muted-foreground">CID</label>
+                                  {editingGuiaId === guia.id ? (
+                                    <div>
+                                      <Input
+                                        value={editFormData.cid}
+                                        onChange={(e) => setEditFormData({ ...editFormData, cid: e.target.value })}
+                                        placeholder="Ex: A00.0"
+                                        className={`mt-1 ${getFieldError('cid', editFormData.cid) ? 'border-red-500' : ''}`}
+                                      />
+                                      {getFieldError('cid', editFormData.cid) && (
+                                        <p className="text-xs text-red-500 mt-1">{getFieldError('cid', editFormData.cid)}</p>
+                                      )}
+                                    </div>
+                                  ) : (
+                                    <p className="text-sm mt-1">{guia.cid || 'N/A'}</p>
+                                  )}
+                                </div>
+                                <div>
+                                  <label className="text-sm font-medium text-muted-foreground">Valor do Procedimento</label>
+                                  {editingGuiaId === guia.id ? (
+                                    <Input
+                                      type="number"
+                                      step="0.01"
+                                      value={editFormData.valorProcedimento / 100}
+                                      onChange={(e) => setEditFormData({ ...editFormData, valorProcedimento: Math.round(parseFloat(e.target.value) * 100) })}
+                                      className="mt-1"
+                                    />
+                                  ) : (
+                                    <p className="text-sm mt-1">R$ {((guia.valorProcedimento || 0) / 100).toFixed(2)}</p>
+                                  )}
+                                </div>
+                                <div>
+                                  <label className="text-sm font-medium text-muted-foreground">Nome do Médico</label>
+                                  {editingGuiaId === guia.id ? (
+                                    <Input
+                                      value={editFormData.nomeMedico}
+                                      onChange={(e) => setEditFormData({ ...editFormData, nomeMedico: e.target.value })}
+                                      className="mt-1"
+                                    />
+                                  ) : (
+                                    <p className="text-sm mt-1">{guia.nomeMedico || 'N/A'}</p>
+                                  )}
+                                </div>
+                                <div>
+                                  <label className="text-sm font-medium text-muted-foreground">CRM</label>
+                                  {editingGuiaId === guia.id ? (
+                                    <Input
+                                      value={editFormData.crm}
+                                      onChange={(e) => setEditFormData({ ...editFormData, crm: e.target.value })}
+                                      className="mt-1"
+                                    />
+                                  ) : (
+                                    <p className="text-sm mt-1">{guia.crm || 'N/A'}</p>
+                                  )}
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
               </TabsContent>
 
               {/* Tab Checklist */}

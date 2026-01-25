@@ -116,6 +116,25 @@ export const appRouter = router({
       .mutation(async ({ input }) => {
         return await db.createGuia(input);
       }),
+    update: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        nomePaciente: z.string().optional(),
+        cpfPaciente: z.string().optional(),
+        numeroCarteirinha: z.string().optional(),
+        dataProcedimento: z.date().optional(),
+        codigoTUSS: z.string().optional(),
+        cid: z.string().optional(),
+        valorProcedimento: z.number().optional(),
+        nomeMedico: z.string().optional(),
+        crm: z.string().optional(),
+        numeroAutorizacao: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...data } = input;
+        await db.updateGuia(id, data);
+        return { success: true };
+      }),
   }),
 
   regras: router({
