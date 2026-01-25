@@ -164,3 +164,7 @@
 - [x] Adicionar responsividade mobile (drawer/overlay)
 - [x] Destacar item ativo no menu
 - [x] Testar navegação com sidebar
+
+## Correção do Botão Menu Mobile
+- [x] Ajustar z-index do botão do menu para ficar acima dos headers
+- [x] Testar visibilidade em todas as páginas mobile

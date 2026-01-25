@@ -47,9 +47,9 @@ export default function Sidebar({ className }: SidebarProps) {
     <>
       {/* Mobile Toggle Button */}
       <Button
-        variant="ghost"
+        variant="default"
         size="icon"
-        className="fixed top-4 left-4 z-50 lg:hidden"
+        className="fixed top-4 left-4 z-[100] lg:hidden shadow-lg"
         onClick={() => setIsOpen(!isOpen)}
       >
         {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
