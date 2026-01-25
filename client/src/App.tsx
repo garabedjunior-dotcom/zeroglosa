@@ -18,14 +18,16 @@ function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
-      <Route path={"/"} component={Home} />
+      <Route path={"/"} component={Dashboard} />
+      <Route path={"/sobre"} component={Home} />
       <Route path={"/dashboard"} component={Dashboard} />
       <Route path={"/lotes"} component={Lotes} />
       <Route path={"/lotes/novo"} component={NovoLote} />
+      <Route path={"/lotes/:id"} component={DetalhesLote} />
       <Route path={"/ocr"} component={OCR} />
       <Route path={"/regras"} component={Regras} />
       <Route path={"/ia"} component={IACopiloto} />
-      <Route path="/lote/:id" component={DetalhesLote} />
+      <Route path={"/ajuda"} component={Ajuda} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

@@ -99,16 +99,26 @@ export default function NovoLote() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-card">
-        <div className="container py-6">
-          <div className="flex items-center gap-4">
-            <Link href="/lotes">
-              <Button variant="ghost" size="icon">
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-            </Link>
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">Novo Lote XML</h1>
-              <p className="text-muted-foreground mt-1">Envie um arquivo XML TISS para validação</p>
+        <div className="container py-4 sm:py-6 px-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
+              <Link href="/lotes">
+                <Button variant="ghost" size="icon" className="shrink-0">
+                  <ArrowLeft className="h-5 w-5" />
+                </Button>
+              </Link>
+              <div className="flex-1">
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Novo Lote XML</h1>
+                <p className="text-sm sm:text-base text-muted-foreground mt-1">Envie um arquivo XML TISS para validação</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <Link href="/" className="flex-1 sm:flex-none">
+                <Button variant="outline" size="sm" className="w-full sm:w-auto">Dashboard</Button>
+              </Link>
+              <Link href="/lotes" className="flex-1 sm:flex-none">
+                <Button variant="outline" size="sm" className="w-full sm:w-auto">Lotes</Button>
+              </Link>
             </div>
           </div>
         </div>

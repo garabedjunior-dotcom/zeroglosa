@@ -147,3 +147,10 @@
 - [x] Ajustar IA Copiloto para mobile (chat e seletor de lote)
 - [x] Corrigir página de Ajuda para mobile
 - [x] Testar em diferentes breakpoints (320px, 375px, 768px, 1024px)
+
+## Correção de Navegação
+- [x] Alterar rota inicial "/" para apontar para Dashboard
+- [x] Mover landing page para rota "/home" ou "/sobre"
+- [x] Adicionar header de navegação em NovoLote.tsx
+- [x] Verificar navegação em todas as páginas
+- [x] Testar fluxo completo de navegação
