@@ -2,6 +2,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
+import AppLayout from "@/components/AppLayout";
 import { 
   TrendingDown, 
   DollarSign, 
@@ -9,11 +10,11 @@ import {
   Zap, 
   AlertTriangle,
   CheckCircle2,
-  FileText,
-  Upload
+  Upload,
+  FileText
 } from "lucide-react";
 import { Link } from "wouter";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -50,39 +51,20 @@ export default function Dashboard() {
   const COLORS = ['oklch(0.62 0.18 250)', 'oklch(0.70 0.15 50)'];
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card">
-        <div className="container py-4 sm:py-6 px-4">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <AppLayout>
+      <div className="min-h-screen bg-background">
+        {/* Header */}
+        <header className="border-b bg-card">
+          <div className="container py-4 sm:py-6 px-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-foreground">ZeroGlosa</h1>
-              <p className="text-sm sm:text-base text-muted-foreground mt-1">Gestão Inteligente de Glosas Médicas</p>
-            </div>
-            <div className="flex flex-wrap items-center gap-2 sm:gap-4 w-full sm:w-auto">
-              <span className="text-xs sm:text-sm text-muted-foreground hidden md:inline">Olá, {user?.name || 'Usuário'}</span>
-              <Link href="/lotes" className="flex-1 sm:flex-none">
-                <Button variant="outline" size="sm" className="w-full sm:w-auto">
-                  <FileText className="h-4 w-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Lotes</span>
-                </Button>
-              </Link>
-              <Link href="/regras" className="flex-1 sm:flex-none">
-                <Button variant="outline" size="sm" className="w-full sm:w-auto">Regras</Button>
-              </Link>
-              <Link href="/ia" className="flex-1 sm:flex-none">
-                <Button variant="outline" size="sm" className="w-full sm:w-auto hidden sm:inline-flex">IA Copiloto</Button>
-              </Link>
-              <Link href="/ajuda" className="flex-1 sm:flex-none">
-                <Button variant="outline" size="sm" className="w-full sm:w-auto">Ajuda</Button>
-              </Link>
+              <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Dashboard</h1>
+              <p className="text-sm sm:text-base text-muted-foreground mt-1">Visão geral do sistema</p>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      {/* Main Content */}
-      <main className="container py-6 sm:py-8 px-4">
+        {/* Main Content */}
+        <main className="container py-6 sm:py-8 px-4">
         {/* KPIs */}
         <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-6 sm:mb-8">
           <Card className="border-l-4 border-l-primary">
@@ -252,5 +234,6 @@ export default function Dashboard() {
         )}
       </main>
     </div>
+    </AppLayout>
   );
 }

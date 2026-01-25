@@ -154,3 +154,13 @@
 - [x] Adicionar header de navegação em NovoLote.tsx
 - [x] Verificar navegação em todas as páginas
 - [x] Testar fluxo completo de navegação
+
+## Menu Lateral Persistente (Sidebar)
+- [x] Criar componente Sidebar.tsx com navegação completa
+- [x] Adicionar ícones e labels para cada item do menu
+- [x] Criar layout wrapper (AppLayout.tsx) com sidebar
+- [x] Integrar AppLayout em todas as páginas principais
+- [x] Implementar toggle para colapsar/expandir sidebar
+- [x] Adicionar responsividade mobile (drawer/overlay)
+- [x] Destacar item ativo no menu
+- [x] Testar navegação com sidebar
