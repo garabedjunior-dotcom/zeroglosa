@@ -183,3 +183,6 @@
 - [x] Remover redirecionamento automático para Dashboard na landing page
 - [x] Tornar rota "/" acessível sem login
 - [x] Mover Dashboard para rota protegida "/dashboard"
+
+## Correção Rota /sobre
+- [x] Adicionar rota /sobre como alias para landing page
