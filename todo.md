@@ -25,9 +25,9 @@
 - [x] Filtros por operadora
 - [x] Filtros por status
 - [x] Filtros por período
-- [ ] Checklist de pré-envio
+- [x] Checklist de pré-envio
 - [x] Listagem de lotes com detalhes
-- [ ] Visualização detalhada de lote individual
+- [x] Visualização detalhada de lote individual
 
 ## Conversor de Faturas (OCR)
 - [x] Upload de foto/PDF de fatura manual
@@ -186,3 +186,7 @@
 
 ## Correção Rota /sobre
 - [x] Adicionar rota /sobre como alias para landing page
+
+## Correção Link Ver Detalhes
+- [x] Corrigir link de /lote/:id para /lotes/:id na página Lotes
+- [x] Marcar itens 28 e 30 como concluídos
