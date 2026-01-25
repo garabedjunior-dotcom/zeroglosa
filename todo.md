@@ -171,3 +171,7 @@
 
 ## Reposicionamento do Botão Menu Mobile
 - [x] Mover botão do menu de left-4 para right-4 (lado direito)
+
+## Melhorias UX Sidebar Mobile
+- [x] Adicionar animação de slide-in/out na sidebar
+- [x] Implementar fechamento automático ao clicar em item de navegação

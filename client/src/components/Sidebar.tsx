@@ -65,11 +65,9 @@ export default function Sidebar({ className }: SidebarProps) {
 
       {/* Sidebar */}
       <aside
-        className={cn(
-          "fixed top-0 left-0 z-40 h-screen w-64 bg-card border-r transition-transform duration-300",
-          isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
-          className
-        )}
+        className={`fixed top-0 left-0 z-50 h-full w-64 bg-card border-r transform transition-all duration-300 ease-in-out lg:translate-x-0 ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
         <div className="flex flex-col h-full">
           {/* Header */}
