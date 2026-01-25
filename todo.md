@@ -175,3 +175,6 @@
 ## Melhorias UX Sidebar Mobile
 - [x] Adicionar animação de slide-in/out na sidebar
 - [x] Implementar fechamento automático ao clicar em item de navegação
+
+## Botão de Retorno na Landing Page
+- [x] Adicionar link "Voltar" ou "Explorar sem Login" na landing page

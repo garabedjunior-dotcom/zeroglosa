@@ -37,6 +37,11 @@ export default function Home() {
               <span className="text-xl sm:text-2xl font-bold text-foreground">ZeroGlosa</span>
             </div>
             <div className="flex items-center gap-2 sm:gap-4">
+              <Link href="#features">
+                <Button variant="ghost" size="sm" className="text-xs sm:text-sm">
+                  Explorar
+                </Button>
+              </Link>
               <a href={getLoginUrl()} className="text-xs sm:text-sm text-muted-foreground hover:text-foreground hidden sm:inline">
                 Entrar
               </a>
@@ -97,7 +102,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-12 sm:py-20">
+      <section id="features" className="py-12 sm:py-20">
         <div className="container px-4">
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 sm:mb-4">Funcionalidades Principais</h2>
