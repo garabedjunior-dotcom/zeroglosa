@@ -184,12 +184,12 @@ export default function Relatorios() {
                           <XAxis dataKey="name" tick={{ fontSize: 12 }} />
                           <YAxis />
                           <Tooltip
-                            formatter={(value, name) => [
+                            formatter={(value: any, name: any) => [
                               value,
                               name === "total" ? "Total" :
                               name === "aprovados" ? "Aprovados" : "Glosados",
-                            ]}
-                            labelFormatter={(label, payload) =>
+                            ] as any}
+                            labelFormatter={(label: any, payload: any) =>
                               payload?.[0]?.payload?.nomeCompleto ?? label
                             }
                           />

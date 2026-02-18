@@ -50,7 +50,7 @@ export function retryAfterSeconds(key: string): number {
 // Limpa entradas expiradas a cada 5 minutos para evitar leak de memória
 setInterval(() => {
   const now = Date.now();
-  for (const [key, entry] of store.entries()) {
+  for (const [key, entry] of Array.from(store.entries())) {
     if (now >= entry.resetAt) store.delete(key);
   }
 }, 5 * 60_000).unref?.();

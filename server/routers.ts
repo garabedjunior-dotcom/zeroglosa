@@ -685,11 +685,9 @@ IMPORTANTE: Lembre que o ideal é PREVENIR glosas antes do envio. Este recurso s
   relatorios: router({
     exportarLotesCSV: protectedProcedure.query(async ({ ctx }) => {
       const userLotes = await db.getLotesByUserId(ctx.user.id);
-      const operadoras = await db.getOperadorasByUserId
-        ? await db.getOperadorasByUserId()
-        : await db.listOperadoras();
+      const operadoras = await db.getAllOperadoras();
 
-      const opMap = new Map(operadoras.map(op => [op.id, op.nome]));
+      const opMap = new Map(operadoras.map((op: any) => [op.id, op.nome]));
 
       const header = [
         "ID",
