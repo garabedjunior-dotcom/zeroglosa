@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { index, int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -58,7 +58,11 @@ export const lotes = mysqlTable("lotes", {
   observacoes: text("observacoes"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-});
+}, (table) => [
+  index("idx_lotes_userId").on(table.userId),
+  index("idx_lotes_operadoraId").on(table.operadoraId),
+  index("idx_lotes_status").on(table.status),
+]);
 
 export type Lote = typeof lotes.$inferSelect;
 export type InsertLote = typeof lotes.$inferInsert;
@@ -83,7 +87,9 @@ export const guias = mysqlTable("guias", {
   motivoGlosa: text("motivoGlosa"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-});
+}, (table) => [
+  index("idx_guias_loteId").on(table.loteId),
+]);
 
 export type Guia = typeof guias.$inferSelect;
 export type InsertGuia = typeof guias.$inferInsert;
@@ -103,10 +109,33 @@ export const regras = mysqlTable("regras", {
   ativa: int("ativa").default(1).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-});
+}, (table) => [
+  index("idx_regras_operadoraId").on(table.operadoraId),
+]);
 
 export type Regra = typeof regras.$inferSelect;
 export type InsertRegra = typeof regras.$inferInsert;
+
+/**
+ * Histórico de alterações de regras (audit log)
+ */
+export const regraHistorico = mysqlTable("regraHistorico", {
+  id: int("id").autoincrement().primaryKey(),
+  regraId: int("regraId").notNull(),
+  operadoraId: int("operadoraId").notNull(),
+  userId: int("userId").notNull(),
+  acao: mysqlEnum("acao", ["criada", "atualizada", "desativada"]).notNull(),
+  campoAlterado: varchar("campoAlterado", { length: 100 }),
+  valorAnterior: text("valorAnterior"),
+  valorNovo: text("valorNovo"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => [
+  index("idx_regraHistorico_regraId").on(table.regraId),
+  index("idx_regraHistorico_operadoraId").on(table.operadoraId),
+]);
+
+export type RegraHistorico = typeof regraHistorico.$inferSelect;
+export type InsertRegraHistorico = typeof regraHistorico.$inferInsert;
 
 /**
  * Histórico de conversões OCR
@@ -122,7 +151,9 @@ export const conversoesOCR = mysqlTable("conversoesOCR", {
   mensagemErro: text("mensagemErro"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-});
+}, (table) => [
+  index("idx_conversoesOCR_userId").on(table.userId),
+]);
 
 export type ConversaoOCR = typeof conversoesOCR.$inferSelect;
 export type InsertConversaoOCR = typeof conversoesOCR.$inferInsert;
@@ -139,7 +170,10 @@ export const interacoesIA = mysqlTable("interacoesIA", {
   resposta: text("resposta"),
   contexto: text("contexto"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
+}, (table) => [
+  index("idx_interacoesIA_userId").on(table.userId),
+  index("idx_interacoesIA_loteId").on(table.loteId),
+]);
 
 export type InteracaoIA = typeof interacoesIA.$inferSelect;
 export type InsertInteracaoIA = typeof interacoesIA.$inferInsert;
@@ -157,7 +191,9 @@ export const validacoes = mysqlTable("validacoes", {
   detalhes: text("detalhes"),
   critico: int("critico").default(0).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
+}, (table) => [
+  index("idx_validacoes_loteId").on(table.loteId),
+]);
 
 export type Validacao = typeof validacoes.$inferSelect;
 export type InsertValidacao = typeof validacoes.$inferInsert;
