@@ -1,4 +1,3 @@
-import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/components/AppLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,9 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { trpc } from "@/lib/trpc";
-import { 
-  FileText, 
-  Upload, 
+import {
+  FileText,
+  Upload,
   Search,
   Filter,
   AlertCircle,
@@ -16,19 +15,27 @@ import {
   Clock,
   XCircle,
   Eye,
-  ArrowLeft
+  ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { Link } from "wouter";
 import { useState } from "react";
 
+const PAGE_SIZE = 20;
+
 export default function Lotes() {
-  const { user } = useAuth();
-  const { data: lotes, isLoading } = trpc.lotes.list.useQuery();
   const { data: operadoras } = trpc.operadoras.list.useQuery();
-  
+
   const [filtroStatus, setFiltroStatus] = useState<string>("todos");
   const [filtroOperadora, setFiltroOperadora] = useState<string>("todas");
   const [busca, setBusca] = useState("");
+  const [page, setPage] = useState(1);
+
+  const { data, isLoading } = trpc.lotes.listPaginated.useQuery({ page, limit: PAGE_SIZE });
+  const lotes = data?.items ?? [];
+  const total = data?.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   if (isLoading) {
     return (
@@ -72,14 +79,13 @@ export default function Lotes() {
     );
   };
 
-  // Filtrar lotes
-  const lotesFiltrados = lotes?.filter(lote => {
+  // Filtros client-side aplicados sobre a página atual
+  const lotesFiltrados = lotes.filter(lote => {
     const matchStatus = filtroStatus === "todos" || lote.status === filtroStatus;
     const matchOperadora = filtroOperadora === "todas" || lote.operadoraId.toString() === filtroOperadora;
-    const matchBusca = !busca || 
+    const matchBusca = !busca ||
       lote.numeroLote?.toLowerCase().includes(busca.toLowerCase()) ||
       lote.id.toString().includes(busca);
-    
     return matchStatus && matchOperadora && matchBusca;
   });
 
@@ -98,7 +104,10 @@ export default function Lotes() {
               </Link>
               <div className="flex-1">
                 <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Lotes & Glosas</h1>
-                <p className="text-sm sm:text-base text-muted-foreground mt-1">Gerencie seus lotes de guias TISS</p>
+                <p className="text-sm sm:text-base text-muted-foreground mt-1">
+                  Gerencie seus lotes de guias TISS
+                  {total > 0 && <span className="ml-2 text-xs">({total} lotes no total)</span>}
+                </p>
               </div>
             </div>
             <Link href="/lotes/novo">
@@ -130,7 +139,7 @@ export default function Lotes() {
                   <Input
                     placeholder="Número do lote ou ID..."
                     value={busca}
-                    onChange={(e) => setBusca(e.target.value)}
+                    onChange={(e) => { setBusca(e.target.value); setPage(1); }}
                     className="pl-9"
                   />
                 </div>
@@ -138,7 +147,7 @@ export default function Lotes() {
 
               <div className="space-y-2">
                 <label className="text-sm font-medium">Status</label>
-                <Select value={filtroStatus} onValueChange={setFiltroStatus}>
+                <Select value={filtroStatus} onValueChange={(v) => { setFiltroStatus(v); setPage(1); }}>
                   <SelectTrigger>
                     <SelectValue placeholder="Todos os status" />
                   </SelectTrigger>
@@ -156,7 +165,7 @@ export default function Lotes() {
 
               <div className="space-y-2">
                 <label className="text-sm font-medium">Operadora</label>
-                <Select value={filtroOperadora} onValueChange={setFiltroOperadora}>
+                <Select value={filtroOperadora} onValueChange={(v) => { setFiltroOperadora(v); setPage(1); }}>
                   <SelectTrigger>
                     <SelectValue placeholder="Todas as operadoras" />
                   </SelectTrigger>
@@ -176,10 +185,10 @@ export default function Lotes() {
 
         {/* Lista de Lotes */}
         <div className="space-y-4">
-          {lotesFiltrados && lotesFiltrados.length > 0 ? (
+          {lotesFiltrados.length > 0 ? (
             lotesFiltrados.map(lote => {
               const operadora = operadoras?.find(op => op.id === lote.operadoraId);
-              
+
               return (
                 <Card key={lote.id} className="hover:shadow-md transition-shadow">
                   <CardContent className="p-4 sm:p-6">
@@ -192,7 +201,7 @@ export default function Lotes() {
                           {getStatusBadge(lote.status)}
                           {getOrigemBadge(lote.origem)}
                         </div>
-                        
+
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-3 sm:mt-4">
                           <div>
                             <p className="text-sm text-muted-foreground">Operadora</p>
@@ -211,8 +220,8 @@ export default function Lotes() {
                           <div>
                             <p className="text-sm text-muted-foreground">Score de Risco</p>
                             <p className={`font-medium ${
-                              (lote.scoreRisco || 0) > 70 ? 'text-destructive' : 
-                              (lote.scoreRisco || 0) > 40 ? 'text-warning' : 
+                              (lote.scoreRisco || 0) > 70 ? 'text-destructive' :
+                              (lote.scoreRisco || 0) > 40 ? 'text-warning' :
                               'text-success'
                             }`}>
                               {lote.scoreRisco || 0}%
@@ -252,8 +261,8 @@ export default function Lotes() {
                 <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-2">Nenhum lote encontrado</h3>
                 <p className="text-muted-foreground mb-4">
-                  {lotes && lotes.length > 0 
-                    ? "Tente ajustar os filtros de busca" 
+                  {total > 0
+                    ? "Tente ajustar os filtros de busca"
                     : "Comece enviando seu primeiro lote de guias TISS"}
                 </p>
                 <Link href="/lotes/novo">
@@ -266,6 +275,37 @@ export default function Lotes() {
             </Card>
           )}
         </div>
+
+        {/* Paginação */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between mt-6">
+            <p className="text-sm text-muted-foreground">
+              Página {page} de {totalPages} &middot; {total} lotes
+            </p>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(p => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="gap-1"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Anterior
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className="gap-1"
+              >
+                Próxima
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        )}
       </main>
     </div>
     </AppLayout>

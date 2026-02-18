@@ -1,22 +1,24 @@
-import { eq, desc, and, sql } from "drizzle-orm";
+import { eq, desc, and, sql, count as sqlCount } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { 
-  InsertUser, 
-  users, 
-  operadoras, 
-  lotes, 
-  guias, 
-  regras, 
-  conversoesOCR, 
+import {
+  InsertUser,
+  users,
+  operadoras,
+  lotes,
+  guias,
+  regras,
+  regraHistorico,
+  conversoesOCR,
   interacoesIA,
   validacoes,
   InsertOperadora,
   InsertLote,
   InsertGuia,
   InsertRegra,
+  InsertRegraHistorico,
   InsertConversaoOCR,
   InsertInteracaoIA,
-  InsertValidacao
+  InsertValidacao,
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -113,6 +115,9 @@ export async function getAllOperadoras() {
   return await db.select().from(operadoras).where(eq(operadoras.ativa, 1)).orderBy(operadoras.nome);
 }
 
+/** Alias para getAllOperadoras — usado em relatórios */
+export const listOperadoras = getAllOperadoras;
+
 export async function getOperadoraById(id: number) {
   const db = await getDb();
   if (!db) return null;
@@ -132,6 +137,33 @@ export async function getLotesByUserId(userId: number) {
   const db = await getDb();
   if (!db) return [];
   return await db.select().from(lotes).where(eq(lotes.userId, userId)).orderBy(desc(lotes.createdAt));
+}
+
+export async function getLotesByUserIdPaginated(
+  userId: number,
+  page: number,
+  limit: number,
+) {
+  const db = await getDb();
+  if (!db) return { items: [], total: 0 };
+
+  const offset = (page - 1) * limit;
+
+  const [items, [{ total }]] = await Promise.all([
+    db
+      .select()
+      .from(lotes)
+      .where(eq(lotes.userId, userId))
+      .orderBy(desc(lotes.createdAt))
+      .limit(limit)
+      .offset(offset),
+    db
+      .select({ total: sqlCount() })
+      .from(lotes)
+      .where(eq(lotes.userId, userId)),
+  ]);
+
+  return { items, total: Number(total) };
 }
 
 export async function getLoteById(id: number) {
@@ -205,6 +237,37 @@ export async function updateRegra(id: number, data: Partial<InsertRegra>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.update(regras).set(data).where(eq(regras.id, id));
+}
+
+export async function getRegraById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(regras).where(eq(regras.id, id)).limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function desativarRegra(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(regras).set({ ativa: 0 }).where(eq(regras.id, id));
+}
+
+// Histórico de alterações de regras
+export async function createRegraHistorico(data: InsertRegraHistorico) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(regraHistorico).values(data);
+}
+
+export async function getRegraHistoricoByOperadora(operadoraId: number, limit = 50) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db
+    .select()
+    .from(regraHistorico)
+    .where(eq(regraHistorico.operadoraId, operadoraId))
+    .orderBy(desc(regraHistorico.createdAt))
+    .limit(limit);
 }
 
 // Conversões OCR

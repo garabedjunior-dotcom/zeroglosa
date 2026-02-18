@@ -13,6 +13,7 @@ import OCR from "./pages/OCR";
 import Regras from "./pages/Regras";
 import IACopiloto from "./pages/IACopiloto";
 import Ajuda from "./pages/Ajuda";
+import Relatorios from "./pages/Relatorios";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -27,6 +28,7 @@ function Router() {
       <Route path={"/ocr"} component={OCR} />
       <Route path={"/regras"} component={Regras} />
       <Route path={"/ia"} component={IACopiloto} />
+      <Route path={"/relatorios"} component={Relatorios} />
       <Route path={"/ajuda"} component={Ajuda} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}

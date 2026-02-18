@@ -8,6 +8,7 @@ import {
   Scan,
   Shield,
   Brain,
+  BarChart2,
   HelpCircle,
   Menu,
   X,
@@ -34,6 +35,7 @@ export default function Sidebar({ className }: SidebarProps) {
     { icon: Scan, label: "Conversor OCR", path: "/ocr" },
     { icon: Shield, label: "Regras", path: "/regras" },
     { icon: Brain, label: "IA Copiloto", path: "/ia" },
+    { icon: BarChart2, label: "Relatórios", path: "/relatorios" },
     { icon: HelpCircle, label: "Ajuda", path: "/ajuda" },
   ];
 
