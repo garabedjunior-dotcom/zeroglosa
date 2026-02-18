@@ -1,16 +1,19 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { 
-  LayoutDashboard, 
-  FileText, 
-  Scan, 
-  Shield, 
-  Brain, 
+import { useTheme } from "@/contexts/ThemeContext";
+import {
+  LayoutDashboard,
+  FileText,
+  Scan,
+  Shield,
+  Brain,
   HelpCircle,
   Menu,
   X,
-  LogOut
+  LogOut,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useState } from "react";
@@ -23,9 +26,10 @@ export default function Sidebar({ className }: SidebarProps) {
   const [location] = useLocation();
   const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const { theme, toggleTheme, switchable } = useTheme();
 
   const menuItems = [
-    { icon: LayoutDashboard, label: "Dashboard", path: "/" },
+    { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
     { icon: FileText, label: "Lotes & Glosas", path: "/lotes" },
     { icon: Scan, label: "Conversor OCR", path: "/ocr" },
     { icon: Shield, label: "Regras", path: "/regras" },
@@ -34,7 +38,7 @@ export default function Sidebar({ className }: SidebarProps) {
   ];
 
   const isActive = (path: string) => {
-    if (path === "/") return location === "/";
+    if (path === "/dashboard") return location === "/dashboard" || location === "/";
     return location.startsWith(path);
   };
 
@@ -71,11 +75,26 @@ export default function Sidebar({ className }: SidebarProps) {
       >
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="p-6 border-b">
-            <Link href="/" onClick={() => setIsOpen(false)}>
+          <div className="p-6 border-b flex items-center justify-between">
+            <Link href="/dashboard" onClick={() => setIsOpen(false)}>
               <h1 className="text-2xl font-bold text-primary">ZeroGlosa</h1>
               <p className="text-xs text-muted-foreground mt-1">Gestão de Glosas</p>
             </Link>
+            {switchable && toggleTheme && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleTheme}
+                title={theme === "dark" ? "Ativar modo claro" : "Ativar modo escuro"}
+                className="shrink-0"
+              >
+                {theme === "dark" ? (
+                  <Sun className="h-4 w-4" />
+                ) : (
+                  <Moon className="h-4 w-4" />
+                )}
+              </Button>
+            )}
           </div>
 
           {/* Navigation */}

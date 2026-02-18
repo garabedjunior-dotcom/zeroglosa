@@ -163,6 +163,13 @@ export async function getGuiasByLoteId(loteId: number) {
   return await db.select().from(guias).where(eq(guias.loteId, loteId)).orderBy(guias.id);
 }
 
+export async function getGuiaById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(guias).where(eq(guias.id, id)).limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
 export async function createGuia(data: InsertGuia) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
@@ -235,21 +242,28 @@ export async function getInteracoesByLoteId(loteId: number) {
   return await db.select().from(interacoesIA).where(eq(interacoesIA.loteId, loteId)).orderBy(desc(interacoesIA.createdAt));
 }
 
-// Dashboard KPIs
+// Dashboard KPIs — uses SQL aggregations to avoid loading all rows into memory
 export async function getDashboardKPIs(userId: number) {
   const db = await getDb();
   if (!db) return null;
 
-  // Buscar todos os lotes do usuário
-  const userLotes = await db.select().from(lotes).where(eq(lotes.userId, userId));
-  
-  // Calcular métricas
-  const totalLotes = userLotes.length;
-  const lotesAprovados = userLotes.filter(l => l.status === 'aprovado').length;
-  const lotesGlosados = userLotes.filter(l => l.status === 'glosa').length;
-  const valorTotal = userLotes.reduce((sum, l) => sum + (l.valorTotal || 0), 0);
-  const valorGlosado = userLotes.filter(l => l.status === 'glosa').reduce((sum, l) => sum + (l.valorTotal || 0), 0);
-  
+  const [counts] = await db
+    .select({
+      totalLotes: sql<number>`COUNT(*)`,
+      lotesAprovados: sql<number>`SUM(CASE WHEN ${lotes.status} = 'aprovado' THEN 1 ELSE 0 END)`,
+      lotesGlosados: sql<number>`SUM(CASE WHEN ${lotes.status} = 'glosa' THEN 1 ELSE 0 END)`,
+      valorTotal: sql<number>`COALESCE(SUM(${lotes.valorTotal}), 0)`,
+      valorGlosado: sql<number>`COALESCE(SUM(CASE WHEN ${lotes.status} = 'glosa' THEN ${lotes.valorTotal} ELSE 0 END), 0)`,
+    })
+    .from(lotes)
+    .where(eq(lotes.userId, userId));
+
+  const totalLotes = Number(counts.totalLotes ?? 0);
+  const lotesAprovados = Number(counts.lotesAprovados ?? 0);
+  const lotesGlosados = Number(counts.lotesGlosados ?? 0);
+  const valorTotal = Number(counts.valorTotal ?? 0);
+  const valorGlosado = Number(counts.valorGlosado ?? 0);
+
   return {
     totalLotes,
     lotesAprovados,
