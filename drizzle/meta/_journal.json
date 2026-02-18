@@ -29,6 +29,13 @@
       "when": 1750000000000,
       "tag": "0003_indexes_and_regra_historico",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1771446083899,
+      "tag": "0004_magical_king_bedlam",
+      "breakpoints": true
     }
   ]
 }
